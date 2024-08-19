@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "soundFile": "E:\\3DProjects\\r3f-vite-starter\\public\\audios\\greeting.ogg",
+    "duration": 6.03
+  },
+  "mouthCues": [
+    { "start": 0.00, "end": 0.06, "value": "X" },
+    { "start": 0.06, "end": 0.29, "value": "D" },
+    { "start": 0.29, "end": 0.36, "value": "B" },
+    { "start": 0.36, "end": 1.12, "value": "X" },
+    { "start": 1.12, "end": 1.22, "value": "B" },
+    { "start": 1.22, "end": 1.29, "value": "C" },
+    { "start": 1.29, "end": 1.40, "value": "A" },
+    { "start": 1.40, "end": 1.49, "value": "C" },
+    { "start": 1.49, "end": 1.77, "value": "B" },
+    { "start": 1.77, "end": 2.50, "value": "X" },
+    { "start": 2.50, "end": 2.57, "value": "F" },
+    { "start": 2.57, "end": 2.63, "value": "C" },
+    { "start": 2.63, "end": 2.70, "value": "B" },
+    { "start": 2.70, "end": 2.78, "value": "A" },
+    { "start": 2.78, "end": 2.94, "value": "F" },
+    { "start": 2.94, "end": 3.53, "value": "B" },
+    { "start": 3.53, "end": 3.60, "value": "F" },
+    { "start": 3.60, "end": 3.67, "value": "E" },
+    { "start": 3.67, "end": 3.81, "value": "B" },
+    { "start": 3.81, "end": 3.95, "value": "E" },
+    { "start": 3.95, "end": 4.02, "value": "F" },
+    { "start": 4.02, "end": 4.16, "value": "B" },
+    { "start": 4.16, "end": 4.98, "value": "X" },
+    { "start": 4.98, "end": 5.28, "value": "C" },
+    { "start": 5.28, "end": 5.49, "value": "B" },
+    { "start": 5.49, "end": 5.56, "value": "D" },
+    { "start": 5.56, "end": 5.76, "value": "A" },
+    { "start": 5.76, "end": 6.03, "value": "X" }
+  ]
+}
