@@ -10,7 +10,6 @@ import { SkeletonUtils } from "three-stdlib";
 import { useControls } from "leva";
 import * as THREE from "three";
 
-
 const corresponding = {
   A: "viseme_PP",
   B: "viseme_kk",
@@ -28,7 +27,7 @@ export function Avatar(props) {
     playAudio: false,
     script: {
       value: "greeting",
-      options: ["greeting", "intro", "venu"],
+      options: ["greeting", "intro", "venuSir"],
     },
   });
 
@@ -37,10 +36,10 @@ export function Avatar(props) {
   const jsonFile = useLoader(THREE.FileLoader, `audios/${script}.json`);
   const lipSync = JSON.parse(jsonFile);
 
-  useFrame(()=> {
+  useFrame(() => {
     const currentAudioTime = audio.currentTime;
 
-    if(audio.paused || audio.ended){
+    if (audio.paused || audio.ended) {
       setAnimation("idle");
       nodes.Wolf3D_Head.morphTargetInfluences[
         nodes.Wolf3D_Head.morphTargetDictionary["viseme_sil"]
@@ -50,7 +49,7 @@ export function Avatar(props) {
       ] = 0;
     }
 
-    Object.values(corresponding).forEach((value)=> {
+    Object.values(corresponding).forEach((value) => {
       nodes.Wolf3D_Head.morphTargetInfluences[
         nodes.Wolf3D_Head.morphTargetDictionary[value]
       ] = 0;
@@ -59,42 +58,26 @@ export function Avatar(props) {
       ] = 0;
     });
 
-    for (let i = 0; i<lipSync.mouthCues.length; i++){
+    for (let i = 0; i < lipSync.mouthCues.length; i++) {
       const mouthCues = lipSync.mouthCues[i];
-      if(currentAudioTime >= mouthCues.start && currentAudioTime <= mouthCues.end){
+      if (
+        currentAudioTime >= mouthCues.start &&
+        currentAudioTime <= mouthCues.end
+      ) {
         nodes.Wolf3D_Head.morphTargetInfluences[
-          nodes.Wolf3D_Head.morphTargetDictionary[corresponding[mouthCues.value]]
+          nodes.Wolf3D_Head.morphTargetDictionary[
+            corresponding[mouthCues.value]
+          ]
         ] = 1;
         nodes.Wolf3D_Teeth.morphTargetInfluences[
-          nodes.Wolf3D_Teeth.morphTargetDictionary[corresponding[mouthCues.value]]
+          nodes.Wolf3D_Teeth.morphTargetDictionary[
+            corresponding[mouthCues.value]
+          ]
         ] = 1;
-        break
+        break;
       }
-    }
-
-  })
-
-  useEffect(() => {
-    if (playAudio) {
-      audio.play();
-      if (script == "greeting"){
-        setAnimation("waving")
-      }
-      else if(script == "pg"){
-        setAnimation("arguing")
-      }
-      else{
-        setAnimation("arguing")
-      }
-    } else {
-      setAnimation("idle")
-      audio.pause();
     }
   });
-
-  const { scene } = useGLTF("/models/65a6513250377ef74b7628af.glb");
-  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
-  const { nodes, materials } = useGraph(clone);
 
   const { animations: angryAnimation } = useFBX("/animations/angryGesture.fbx");
   const { animations: idleAnimation } = useFBX("/animations/BreathingIdle.fbx");
@@ -126,13 +109,63 @@ export function Avatar(props) {
   );
 
   useEffect(() => {
+    let timeout;
+    let previousTime = 0;
+    let animationTransitioned = false;
+
+    const handleAnimationTransition = () => {
+      if (
+        wavingAnimation &&
+        wavingAnimation[0] &&
+        wavingAnimation[0].duration &&
+        !animationTransitioned
+      ) {
+        timeout = setInterval(() => {
+          const currentTime = audio.currentTime;
+          const animationDuration = wavingAnimation[0].duration;
+
+          if (currentTime - previousTime >= animationDuration) {
+            setAnimation("arguing");
+            console.log("Animation changed to arguing");
+            animationTransitioned = true;
+            clearInterval(timeout);
+          }
+        }, 100);
+      }
+    };
+
+    if (playAudio) {
+      audio.play();
+      if (script === "greeting") {
+        setAnimation("waving");
+        previousTime = audio.currentTime;
+      } else if (script === "venuSir") {
+        setAnimation("waving");
+        handleAnimationTransition();
+      } else {
+        setAnimation("arguing");
+      }
+    } else {
+      setAnimation("idle");
+      audio.pause();
+    }
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(timeout);
+      animationTransitioned = false;
+    };
+  }, [playAudio, script, wavingAnimation]);
+
+  const { scene } = useGLTF("/models/65a6513250377ef74b7628af.glb");
+  const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const { nodes, materials } = useGraph(clone);
+
+  useEffect(() => {
     actions[animation].reset().fadeIn(0.5).play();
 
     return () => actions[animation].fadeOut(0.5);
   }, [animation]);
-
-
-
 
   return (
     <group {...props} dispose={null} ref={group}>
