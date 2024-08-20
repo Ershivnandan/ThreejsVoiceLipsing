@@ -28,7 +28,7 @@ export function Avatar(props) {
     playAudio: false,
     script: {
       value: "greeting",
-      options: ["greeting", "intro"],
+      options: ["greeting", "intro", "venu"],
     },
   });
 
@@ -80,6 +80,9 @@ export function Avatar(props) {
       if (script == "greeting"){
         setAnimation("waving")
       }
+      else if(script == "pg"){
+        setAnimation("arguing")
+      }
       else{
         setAnimation("arguing")
       }
@@ -94,7 +97,7 @@ export function Avatar(props) {
   const { nodes, materials } = useGraph(clone);
 
   const { animations: angryAnimation } = useFBX("/animations/angryGesture.fbx");
-  const { animations: idleAnimation } = useFBX("/animations/Idle.fbx");
+  const { animations: idleAnimation } = useFBX("/animations/BreathingIdle.fbx");
   const { animations: standingAnimation } = useFBX(
     "/animations/standingGreeting.fbx"
   );
